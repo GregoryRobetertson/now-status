@@ -50,7 +50,22 @@ I use this project to create a **live “What I’m working on” feed** for my 
 
 I can customize and extend this project anytime to better fit my workflow.
 
-## Error
+## 💥 Handling Push Protection: Removing a Committed Secret
 
-- Hnadling secret scanning push errors.
-- While pushing code github may block my push if it detects sesitive information
+While developing, I accidentally committed a `.env` file that contained a **GitHub Personal Access Token**. GitHub’s security blocked the push due to **push protection**.
+
+Here’s exactly how I fixed it in my Codespace:
+
+### ✅ Steps I Took to Fix the Error
+
+1. **Installed `git-filter-repo`**
+
+   ```bash
+   pip install --user git-filter-repo
+   export PATH=$PATH:~/.local/bin
+   git filter-repo --path .env --invert-paths
+   git remote add origin https://github.com/GregoryRobetertson/now-status.git
+   git push -u origin main --force
+
+
+   ```
