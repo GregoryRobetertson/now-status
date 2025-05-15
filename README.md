@@ -49,3 +49,8 @@ I use this project to create a **live “What I’m working on” feed** for my 
 ---
 
 I can customize and extend this project anytime to better fit my workflow.
+
+## Error
+
+- Hnadling secret scanning push errors.
+- While pushing code github may block my push if it detects sesitive information
