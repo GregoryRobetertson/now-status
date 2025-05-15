@@ -54,7 +54,7 @@ I can customize and extend this project anytime to better fit my workflow.
 
 While developing, I accidentally committed a `.env` file that contained a **GitHub Personal Access Token**. GitHub’s security blocked the push due to **push protection**.
 
-Here’s exactly how I fixed it in my Codespace:
+Here’s exactly how I fixed it:
 
 ### ✅ Steps I Took to Fix the Error
 
