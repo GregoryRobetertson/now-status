@@ -41,7 +41,7 @@ https.get(options, (res) => {
       updatedAt: timestamp,
     };
 
-    fs.writeFileSync("public/now.json", JSON.stringify(newStatus, null, 2));
+    fs.writeFileSync("docs/now.json", JSON.stringify(newStatus, null, 2));
     console.log("✅ now.json updated with latest commit message.");
   });
 });
