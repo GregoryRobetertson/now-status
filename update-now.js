@@ -4,13 +4,14 @@ const fs = require("fs");
 const https = require("https");
 
 const username = process.env.GITHUB_USERNAME;
+const token = process.env.GITHUB_TOKEN;
 
 const options = {
   hostname: "api.github.com",
-  path: `/users/${username}/events/public`,
+  path: `/users/${username}/repos?sort=created&direction=desc&per_page=1`,
   headers: {
     "User-Agent": "now-status-script",
-    Authorization: `token ${process.env.GITHUB_TOKEN}`,
+    Authorization: `token ${token}`,
   },
 };
 
@@ -18,30 +19,25 @@ https.get(options, (res) => {
   let body = "";
   res.on("data", (chunk) => (body += chunk));
   res.on("end", () => {
-    const events = JSON.parse(body);
-    console.log("Parsed response:", events);
+    const repos = JSON.parse(body);
 
-    if (!Array.isArray(events)) {
-      console.error("GitHub API response is not an array.");
+    if (!Array.isArray(repos) || repos.length === 0) {
+      console.error("No repositories found.");
       return;
     }
 
-    const pushEvent = events.find((e) => e.type === "PushEvent");
-
-    if (!pushEvent) {
-      console.log("No push events found.");
-      return;
-    }
-
-    const latestCommitMessage = pushEvent.payload.commits[0].message;
+    const latestRepo = repos[0];
     const timestamp = new Date().toISOString();
 
     const newStatus = {
-      now: latestCommitMessage,
+      now: latestRepo.name,
       updatedAt: timestamp,
     };
 
     fs.writeFileSync("docs/now.json", JSON.stringify(newStatus, null, 2));
-    console.log("✅ now.json updated with latest commit message.");
+    console.log(
+      "✅ now.json updated with latest repository name:",
+      latestRepo.name
+    );
   });
 });
