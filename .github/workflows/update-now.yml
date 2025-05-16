@@ -1,0 +1,36 @@
+name: Update now.json from GitHub activity
+
+on:
+  schedule:
+    - cron: "*/30 * * * *" # every 30 minutes
+  workflow_dispatch: # allows manual runs
+
+jobs:
+  update-now:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install dependencies (if any)
+        run: npm install || true
+
+      - name: Run update script
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_USERNAME: GregoryRobetertson
+        run: node update-now.js
+
+      - name: Commit and push updated now.json
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/now.json
+          git commit -m "Update now.json [auto]" || echo "No changes to commit"
+          git push
